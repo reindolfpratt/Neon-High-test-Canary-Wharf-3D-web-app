@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canary Wharf, London — Photorealistic 3D WebGL2</title>
+  </head>
+  <body>
+    <div id="viewport-shell" class="viewport-shell">
+      <canvas id="scene-canvas" aria-label="Interactive 3D Canary Wharf London cityscape"></canvas>
+    </div>
+
+    <div class="crosshair" aria-hidden="true"></div>
+
+    <!-- Minimal GT6-inspired Telemetry HUD -->
+    <header class="hud-top">
+      <div class="telemetry-pill">
+        <span class="brand-dot"></span>
+        <span id="zone-badge" class="zone-name">CABOT SQUARE</span>
+        <span class="divider"></span>
+        <span id="alt-badge" class="mono">1.8 m</span>
+        <span class="divider"></span>
+        <span id="fps-badge" class="mono">-- FPS</span>
+      </div>
+
+      <div class="hud-controls">
+        <button id="btn-tod" class="hud-btn" type="button" title="Cycle Day / Golden Hour / Night (N)">
+          Golden Hour (N)
+        </button>
+        <button id="btn-mode" class="hud-btn" type="button" title="Cycle Walk / Fly / Orbit Camera (F)">
+          Walk (F)
+        </button>
+        <button id="btn-quality" class="hud-btn" type="button" title="Cycle Quality Preset: Low / High / Ultra (Q)">
+          High (Q)
+        </button>
+        <button id="btn-dof" class="hud-btn" type="button" aria-pressed="false" title="Toggle Cinematic Depth of Field (B)">
+          DoF
+        </button>
+        <button id="btn-audio" class="hud-btn" type="button" aria-pressed="false" title="Toggle Ambient Docklands Audio (M)">
+          Sound Off (M)
+        </button>
+        <button id="btn-help" class="hud-btn icon-btn" type="button" title="Controls & Landmarks (H)">?</button>
+      </div>
+    </header>
+
+    <!-- Viewpoint Shortcuts with Verified Outdoor Google Street View Links -->
+    <nav class="hud-viewpoints" aria-label="Canary Wharf Viewpoints">
+      <div class="vp-item">
+        <button class="vp-btn" data-vp="cabot" type="button">Cabot Sq</button>
+        <a class="vp-link" href="https://www.google.com/maps/@51.5049697,-0.0229609,3a,75y,37.67h,90t/data=!3m6!1e1!3m4!1sCIABIhD53E-W59vVm1bDq3x-mCez!2e10!3e11" target="_blank" rel="noopener noreferrer">Street View ↗</a>
+      </div>
+      <div class="vp-item">
+        <button class="vp-btn" data-vp="canada-sq" type="button">One Canada Sq</button>
+        <a class="vp-link" href="https://www.google.com/maps/@51.5049234,-0.0169127,3a,75y,270.12h,90t/data=!3m6!1e1!3m4!1sCIABIhADydVgxjj7M2gJFPAABYaY!2e10!3e11" target="_blank" rel="noopener noreferrer">Street View ↗</a>
+      </div>
+      <div class="vp-item">
+        <button class="vp-btn" data-vp="jubilee" type="button">Jubilee Park</button>
+        <a class="vp-link" href="https://www.google.com/maps/@51.5037142,-0.0199901,3a,75y,325.08h,90t/data=!3m6!1e1!3m4!1sCIHM0ogKEICAgIDqrfvV2gE!2e10!3e11" target="_blank" rel="noopener noreferrer">Street View ↗</a>
+      </div>
+      <div class="vp-item">
+        <button class="vp-btn" data-vp="waterfront" type="button">North Quay</button>
+        <a class="vp-link" href="https://www.google.com/maps/@51.5067573,-0.0224524,3a,75y,139.07h,95.6t/data=!3m6!1e1!3m4!1sCIHM0ogKEICAgIDEwtb9pQE!2e10!3e11" target="_blank" rel="noopener noreferrer">Street View ↗</a>
+      </div>
+      <div class="vp-item">
+        <button class="vp-btn" data-vp="south-bridge" type="button">Middle Dock</button>
+        <a class="vp-link" href="https://www.google.com/maps/@51.5021515,-0.020189,3a,75y,197.52h,93.21t/data=!3m6!1e1!3m4!1sCIHM0ogKEICAgICEnYPPgQE!2e10!3e11" target="_blank" rel="noopener noreferrer">Street View ↗</a>
+      </div>
+      <div class="vp-item">
+        <button class="vp-btn" data-vp="aerial" type="button">Aerial</button>
+        <a class="vp-link" href="https://www.google.com/maps/@51.5048,-0.0202,420a,35y,20h,45t/data=!3m1!1e3" target="_blank" rel="noopener noreferrer">3D Satellite ↗</a>
+      </div>
+    </nav>
+
+    <!-- Live Minimap -->
+    <aside class="minimap-wrap" aria-label="Canary Wharf Minimap">
+      <span class="compass-n">N</span>
+      <canvas id="minimap-canvas" width="164" height="164"></canvas>
+    </aside>
+
+    <!-- Clean Welcome / Controls Overlay -->
+    <section id="welcome-overlay" class="overlay">
+      <div class="overlay-card">
+        <p class="eyebrow">LONDON E14 · DOCKLANDS · 1:1 HUMAN SCALE</p>
+        <h1>Canary Wharf</h1>
+        <p class="subtitle">
+          Photorealistic WebGL2 recreation featuring One Canada Square, HSBC, Citi, Newfoundland,
+          Landmark Pinnacle, Cabot Square, Jubilee Park, DLR Viaduct, reflective docks, UK traffic &amp; HDR post-processing.
+        </p>
+
+        <div class="controls-grid">
+          <div><kbd>WASD</kbd> / <kbd>Arrows</kbd><span>Move</span></div>
+          <div><kbd>Mouse</kbd><span>Look (Click Lock)</span></div>
+          <div><kbd>Shift</kbd><span>Sprint / Fast Fly</span></div>
+          <div><kbd>Space</kbd><span>Jump / Ascend</span></div>
+          <div><kbd>N</kbd><span>Day · Golden · Night</span></div>
+          <div><kbd>F</kbd><span>Walk · Fly · Orbit</span></div>
+          <div><kbd>Q</kbd><span>Low · High · Ultra</span></div>
+          <div><kbd>Esc</kbd><span>Release Cursor</span></div>
+        </div>
+
+        <div class="overlay-actions">
+          <button id="btn-enter" class="primary-btn" type="button">Enter Street Level</button>
+          <button id="btn-orbit-start" class="secondary-btn" type="button">Skyline Orbit View</button>
+        </div>
+      </div>
+    </section>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
