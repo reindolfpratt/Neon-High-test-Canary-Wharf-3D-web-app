@@ -6,13 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview --port 4173"
+    "preview": "vite preview --port 4173",
+    "deploy": "npm run build && cf deploy ./dist"
   },
   "dependencies": {
     "three": "^0.170.0"
   },
   "devDependencies": {
     "@types/three": "^0.170.0",
+    "cf": "^1.0.0-rc.2",
     "typescript": "^5.7.2",
     "vite": "^6.0.3"
   }
